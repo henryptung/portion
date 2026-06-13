@@ -550,7 +550,11 @@ class Interval:
 
     def __sub__(self, other):
         if isinstance(other, Interval):
-            return self & ~other
+            if self.upper < other.lower or self.lower > other.upper:
+                # Early out for non-overlapping intervals
+                return self
+            else:
+                return self & ~other
         else:
             return NotImplemented
 
